@@ -1,37 +1,25 @@
-async function updateWeatherInfo(city) {
-    try {
-        // Show loading state
-        showDisplaySection(searchCitySection);
-
-        // Fetch weather data
-        const response = await fetch(`https://weather-app-1opd.onrender.com/weather?city=${city}`);
-        const weatherData = await response.json();
-
-        if (response.status !== 200) {
-            showDisplaySection(notFoundSection);
-            alert(weatherData.error || 'City not found!');
-            return;
-        }
-
-        console.log(weatherData);
-
-        // Show weather information section
-        showDisplaySection(weatherSection);
-
-        // Update the DOM with weather data
-        document.querySelector('.country-txt').innerText = weatherData.name;
-        document.querySelector('.current-date-txt').innerText = formatDate(new Date());
-
-        document.querySelector('.temp-txt').innerText = `${Math.round(weatherData.main.temp)}°C`;
-        document.querySelector('.condition-txt').innerText = weatherData.weather[0].main;
-
-        document.querySelector('.humidity-value-txt').innerText = `${weatherData.main.humidity}%`;
-        document.querySelectorAll('.humidity-value-txt')[1].innerText = `${weatherData.wind.speed} M/s`;
-
-        document.querySelector('.weather-summary-img').src = getWeatherIcon(weatherData.weather[0].main);
-
-    } catch (error) {
-        console.error('Error:', error);
-        showDisplaySection(notFoundSection); // Show error section if fetch fails
+document.querySelector('#search-btn').addEventListener('click', async () => {
+    const city = document.querySelector('#city-input').value.trim();
+    
+    if (!city) {
+      alert('Please enter a city name.');
+      return;
     }
-}
+  
+    try {
+      const response = await fetch(`https://weather-app-1opd.onrender.com/weather?city=${encodeURIComponent(city)}`);
+      
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      // Example: Update your DOM with weather info
+      document.querySelector('#result').textContent = `Weather for ${city}: ${data.message || 'Data received'}`;
+    } catch (error) {
+      console.error('Fetch error:', error);
+      document.querySelector('#result').textContent = 'Failed to fetch weather data.';
+    }
+  });
+  
