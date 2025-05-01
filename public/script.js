@@ -4,7 +4,7 @@ async function updateWeatherInfo(city) {
         showDisplaySection(searchCitySection);
 
         // Fetch weather data
-        const response = await fetch(`https://weather-app-1opd.onrender.com/weather?city=${Mumbai}`);
+        const response = await fetch(`https://weather-app-1opd.onrender.com/weather?city=${city}`);
         const weatherData = await response.json();
 
         if (response.status !== 200) {
